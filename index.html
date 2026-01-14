@@ -3,291 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evergreen Sungai</title>
+    <title>Evergreen Peaks | Premium Campsite Booking</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;700;800&display=swap');
 
         :root {
-            --primary: #2d4a3e;
-            --secondary: #8da08b;
+            --primary: #1e3a2f;
+            --secondary: #2d4a3e;
             --accent: #d4a373;
-            --bg: #f8f9f5;
+            --bg: #fdfdfb;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
-            color: #333;
+            color: #1a1a1a;
             scroll-behavior: smooth;
         }
 
-        h1, h2, h3 {
-            font-family: 'Nunito', serif;
-        }
-
-        .hero-gradient {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                        url('https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&q=80&w=2070');
-            background-size: cover;
-            background-position: center;
+        h1, h2, h3, .nav-logo {
+            font-family: 'Nunito', sans-serif;
         }
 
         .glass-nav {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&q=80&w=2070');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
         .site-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .site-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 1.5rem;
+            position: relative;
+        }
+
+        .gallery-item img {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
         }
 
         .modal-overlay {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(15, 23, 42, 0.8);
             display: none;
             position: fixed;
             inset: 0;
-            z-index: 50;
+            z-index: 100;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            backdrop-filter: blur(4px);
         }
 
-        .active-filter {
-            background-color: var(--primary) !important;
-            color: white !important;
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.4s ease-in-out;
         }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
+        .mobile-menu.active {
+            transform: translateY(0);
         }
 
-        /* Custom Toast Notification */
+        .btn-primary {
+            background: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(30, 58, 47, 0.3);
+        }
+
         #notification {
-            transform: translateX(150%);
+            transform: translateY(200%);
             transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
+
         #notification.show {
-            transform: translateX(0);
+            transform: translateY(0);
         }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #2d4a3e; border-radius: 4px; }
     </style>
 </head>
 <body class="overflow-x-hidden">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-40 glass-nav border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-mountain text-emerald-800 text-2xl"></i>
-                    <span class="text-xl font-bold tracking-tight text-emerald-900">Campsite Booking</span>
+    <nav class="fixed w-full z-50 glass-nav border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-emerald-900 p-2 rounded-lg">
+                        <i class="fas fa-campground text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-extrabold tracking-tight text-emerald-950 nav-logo">Evergreen Peaks</span>
                 </div>
-                <div class="hidden md:flex space-x-8 font-medium">
-                    <a href="#home" class="text-gray-600 hover:text-emerald-800 transition">Home</a>
-                    <a href="#sites" class="text-gray-600 hover:text-emerald-800 transition">Camp Site</a>
-                    <a href="#amenities" class="text-gray-600 hover:text-emerald-800 transition">Facilities</a>
-                    <a href="#" id="view-my-bookings" class="text-emerald-700 hover:text-emerald-900 font-semibold transition">My Bookings</a>
+                
+                <!-- Desktop Links -->
+                <div class="hidden md:flex items-center space-x-8 font-medium">
+                    <a href="#home" class="text-gray-700 hover:text-emerald-800 transition">Home</a>
+                    <a href="#sites" class="text-gray-700 hover:text-emerald-800 transition">Campsites</a>
+                    <a href="#testimonials" class="text-gray-700 hover:text-emerald-800 transition">Reviews</a>
+                    <a href="#gallery" class="text-gray-700 hover:text-emerald-800 transition">Gallery</a>
+                    <a href="#contact" class="text-gray-700 hover:text-emerald-800 transition">Support</a>
+                    <a href="#sites" class="btn-primary text-white px-6 py-2.5 rounded-full text-sm font-bold">Book Now</a>
                 </div>
-                <button class="md:hidden text-gray-600" id="mobile-menu-btn">
-                    <i class="fas fa-bars text-xl"></i>
+
+                <!-- Mobile Toggle -->
+                <button class="md:hidden text-emerald-950 p-2" id="mobile-menu-btn">
+                    <i class="fas fa-bars-staggered text-2xl" id="menu-icon"></i>
                 </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="absolute top-20 left-0 w-full bg-white border-b border-gray-100 shadow-xl md:hidden mobile-menu z-40">
+            <div class="flex flex-col p-6 space-y-4 font-semibold text-gray-800">
+                <a href="#home" class="mobile-link py-2 border-b border-gray-50">Home</a>
+                <a href="#sites" class="mobile-link py-2 border-b border-gray-50">Explore Sites</a>
+                <a href="#testimonials" class="mobile-link py-2 border-b border-gray-50">Testimonials</a>
+                <a href="#gallery" class="mobile-link py-2 border-b border-gray-50">Gallery</a>
+                <a href="#contact" class="mobile-link py-2 border-b border-gray-50">Contact Us</a>
+                <a href="#sites" class="bg-emerald-900 text-white text-center py-4 rounded-xl">Start Booking</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero-gradient h-screen flex items-center justify-center text-white text-center px-4 pt-16">
-        <div class="max-w-3xl animate-fade-in">
-            <h1 class="text-5xl md:text-7xl mb-6 text-slate-900">Reconnect with Nature.</h1>
-            <p class="text-lg md:text-xl mb-8 font-light tracking-wide">Discover premium campsites tucked away in the heart of the Emerald Valley. Adventure awaits beneath the stars.</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#sites" class="bg-emerald-800 hover:bg-emerald-900 text-white px-8 py-4 rounded-full font-semibold transition-all flex items-center justify-center gap-2">
-                    Book Now <i class="fas fa-arrow-right text-sm"></i>
-                </a>
-                <a href="#amenities" class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 px-8 py-4 rounded-full font-semibold transition-all">
-                    Explore Amenities
-                </a>
+    <section id="home" class="hero-section min-h-screen flex items-center pt-20">
+        <div class="max-w-7xl mx-auto px-6 w-full grid md:grid-cols-2 gap-12 items-center">
+            <div class="text-white space-y-8 animate-fade-in-up">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-sm font-semibold">
+                    <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                    Now taking Spring 2026 Reservations
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold leading-tight">
+                    Escape the Ordinary. <br>
+                    <span class="text-emerald-300">Embrace the Wild.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-emerald-50/90 max-w-lg leading-relaxed">
+                    Premium camping experiences in the heart of Evergreen Valley. Whether you're a solo hiker or a family of five, find your perfect site today.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <a href="#sites" class="btn-primary text-white px-10 py-5 rounded-2xl font-bold text-center flex items-center justify-center gap-3">
+                        View Availability <i class="fas fa-calendar-check"></i>
+                    </a>
+                    <a href="#testimonials" class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 px-10 py-5 rounded-2xl font-bold text-center transition">
+                        Read Stories
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Campsites Explorer -->
-    <section id="sites" class="max-w-7xl mx-auto px-4 py-20">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl text-gray-900 mb-4">Choose Your Basecamp</h2>
-            <div class="h-1 w-20 bg-emerald-800 mx-auto mb-8"></div>
+    <!-- Product Section: Feature Grid -->
+    <section id="sites" class="max-w-7xl mx-auto px-6 py-24">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div class="max-w-xl">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-emerald-950 mb-4">Choose Your Basecamp</h2>
+                <p class="text-gray-600">Curated spots for every type of adventurer. All sites include private fire pits and access to fresh spring water.</p>
+            </div>
             
             <!-- Filters -->
-            <div class="flex flex-wrap justify-center gap-3" id="filters-container">
-                <button class="filter-btn active-filter px-6 py-2 rounded-full border border-gray-300 transition-all font-medium" data-filter="all">All Sites</button>
-                <button class="filter-btn bg-white px-6 py-2 rounded-full border border-gray-300 transition-all font-medium hover:border-emerald-800" data-filter="tent">Tent Only</button>
-                <button class="filter-btn bg-white px-6 py-2 rounded-full border border-gray-300 transition-all font-medium hover:border-emerald-800" data-filter="rv">RV Friendly</button>
-                <button class="filter-btn bg-white px-6 py-2 rounded-full border border-gray-300 transition-all font-medium hover:border-emerald-800" data-filter="glamping">Glamping</button>
+            <div class="flex flex-wrap gap-2" id="filters-container">
+                <button class="filter-btn active bg-emerald-900 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-emerald-900/20 text-sm" data-filter="all">All Sites</button>
+                <button class="filter-btn bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-50 transition text-sm" data-filter="tent">Tent Only</button>
+                <button class="filter-btn bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-50 transition text-sm" data-filter="rv">RV Friendly</button>
+                <button class="filter-btn bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-50 transition text-sm" data-filter="glamping">Glamping</button>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="campsites-grid">
-            <!-- Dynamic Content Load via JS -->
+            <!-- Dynamic Content -->
         </div>
     </section>
 
+    <!-- Social Proof: Testimonials -->
+    <section id="testimonials" class="bg-emerald-50/50 py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-950">Trusted by Adventurers</h2>
+                <p class="text-gray-600 mt-4">Don't just take our word for it—join over 5,000 happy campers.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="testimonial-card">
+                    <div class="flex text-amber-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-gray-700 italic mb-6">"The Starry Night Dome was magical. We spent hours watching the Milky Way through the ceiling. Highly recommend!"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-200 rounded-full flex items-center justify-center font-bold text-emerald-800">SJ</div>
+                        <div>
+                            <p class="font-bold text-emerald-950">Sarah Jenkins</p>
+                            <p class="text-sm text-gray-500">Nature Enthusiast</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="flex text-amber-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-gray-700 italic mb-6">"Perfect for our RV. The hookups were reliable and the river view from Riverside A2 was spectacular."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-200 rounded-full flex items-center justify-center font-bold text-emerald-800">MR</div>
+                        <div>
+                            <p class="font-bold text-emerald-950">Mark Ross</p>
+                            <p class="text-sm text-gray-500">Digital Nomad</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="flex text-amber-400 mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-gray-700 italic mb-6">"Clean facilities, friendly staff, and the most peaceful environment. My favorite getaway spot in the country."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-200 rounded-full flex items-center justify-center font-bold text-emerald-800">KL</div>
+                        <div>
+                            <p class="font-bold text-emerald-950">Kevin Lim</p>
+                            <p class="text-sm text-gray-500">Avid Hiker</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-emerald-950">Nature's Canvas</h2>
+            <p class="text-gray-600 mt-4">A glimpse of the breathtaking views waiting for you.</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="gallery-item h-64 md:col-span-2">
+                <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=1200" alt="Campsite Night" class="w-full h-full object-cover">
+            </div>
+            <div class="gallery-item h-64">
+                <img src="https://images.unsplash.com/photo-1496080174650-637e3f22fa03?auto=format&fit=crop&q=80&w=600" alt="Mountain View" class="w-full h-full object-cover">
+            </div>
+            <div class="gallery-item h-64">
+                <img src="https://images.unsplash.com/photo-1533167649158-6d508895b680?auto=format&fit=crop&q=80&w=600" alt="Morning Mist" class="w-full h-full object-cover">
+            </div>
+            <div class="gallery-item h-64">
+                <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&q=80&w=600" alt="Forest Path" class="w-full h-full object-cover">
+            </div>
+            <div class="gallery-item h-64 md:col-span-2">
+                <img src="https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&q=80&w=1200" alt="Sunset Lake" class="w-full h-full object-cover">
+            </div>
+            <div class="gallery-item h-64">
+                <img src="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=600" alt="River Bank" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form & CTA -->
+    <section id="contact" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="bg-emerald-900 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row">
+            <div class="lg:w-1/2 p-12 lg:p-20 text-white space-y-6">
+                <h2 class="text-4xl font-extrabold">Need Help with Your Trip?</h2>
+                <p class="text-emerald-100/80 text-lg">Send us a message and our park rangers will get back to you within 24 hours.</p>
+                <div class="space-y-4 pt-4">
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-phone-alt text-emerald-300"></i>
+                        <span>+1 (555) 0123 4567</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-envelope text-emerald-300"></i>
+                        <span>hello@evergreenpeaks.com</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/2 bg-white p-12 lg:p-20">
+                <form id="contact-form" class="space-y-5">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-emerald-950 mb-1">First Name</label>
+                            <input type="text" required class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-emerald-800 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-emerald-950 mb-1">Email</label>
+                            <input type="email" required class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-emerald-800 outline-none transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-emerald-950 mb-1">Message</label>
+                        <textarea rows="4" required class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-emerald-800 outline-none transition" placeholder="Tell us what you're looking for..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-950 transition">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-emerald-900 p-2 rounded-lg">
+                            <i class="fas fa-campground text-white text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-extrabold tracking-tight text-emerald-950 nav-logo">Evergreen Peaks</span>
+                    </div>
+                    <p class="text-gray-500 max-w-sm">Preserving the wild for over 25 years. We provide sustainable, high-quality camping experiences that reconnect people with the natural world.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-800 hover:bg-emerald-800 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-800 hover:bg-emerald-800 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-800 hover:bg-emerald-800 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-emerald-950 mb-6">Quick Links</h4>
+                    <ul class="space-y-4 text-gray-600">
+                        <li><a href="#" class="hover:text-emerald-800 transition">About Us</a></li>
+                        <li><a href="#" class="hover:text-emerald-800 transition">Park Rules</a></li>
+                        <li><a href="#" class="hover:text-emerald-800 transition">Careers</a></li>
+                        <li><a href="#" class="hover:text-emerald-800 transition">Sitemap</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-emerald-950 mb-6">Legal</h4>
+                    <ul class="space-y-4 text-gray-600">
+                        <li><a href="#" class="hover:text-emerald-800 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-emerald-800 transition">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-emerald-800 transition">Booking Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+                <p>&copy; 2026 Evergreen Peaks. All rights reserved.</p>
+                <p>Designed for the Great Outdoors.</p>
+            </div>
+        </div>
+    </footer>
+
     <!-- Booking Modal -->
     <div id="booking-modal" class="modal-overlay">
-        <div class="bg-white w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl relative animate-scale-up">
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" id="close-modal">
+        <div class="bg-white w-full max-w-4xl rounded-[2rem] overflow-hidden shadow-2xl relative">
+            <button class="absolute top-6 right-6 text-gray-400 hover:text-gray-950 transition z-10 p-2" id="close-modal">
                 <i class="fas fa-times text-2xl"></i>
             </button>
             
-            <div class="flex flex-col md:flex-row h-full">
-                <!-- Site Preview Sidebar -->
-                <div class="md:w-1/3 bg-emerald-50 p-8 hidden md:block">
-                    <div id="modal-img-container" class="w-full h-32 rounded-lg mb-4 bg-cover bg-center"></div>
-                    <h3 id="modal-site-title" class="text-xl font-bold text-emerald-900 mb-2">Site Name</h3>
-                    <p id="modal-site-price" class="text-emerald-700 font-semibold text-lg">$45/night</p>
-                    <div class="mt-6 text-sm text-gray-600 space-y-2">
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-emerald-500"></i> Fire Pit</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-emerald-500"></i> Picnic Table</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check text-emerald-500"></i> Potable Water</div>
+            <div class="flex flex-col md:flex-row">
+                <!-- Visual/Info Panel -->
+                <div class="md:w-[40%] bg-emerald-950 text-white p-10 flex flex-col">
+                    <div id="modal-img-container" class="w-full aspect-square rounded-2xl mb-8 bg-cover bg-center shadow-lg"></div>
+                    <div class="mt-auto space-y-4">
+                        <div class="inline-block px-3 py-1 bg-emerald-800 rounded-full text-xs font-bold uppercase tracking-widest text-emerald-300" id="modal-site-type">Glamping</div>
+                        <h3 id="modal-site-title" class="text-3xl font-bold">Cedar Ridge A1</h3>
+                        <p class="text-emerald-100/70" id="modal-site-desc">Deep in the forest with maximum privacy.</p>
+                        <div class="flex items-baseline gap-2 pt-2">
+                            <span class="text-3xl font-extrabold" id="modal-site-price">$45</span>
+                            <span class="text-emerald-400/60">/night</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Booking Form -->
-                <div class="flex-1 p-8">
-                    <h2 class="text-2xl mb-6">Reserve Site</h2>
-                    <form id="booking-form" class="space-y-4">
+                <!-- Action/Form Panel -->
+                <div class="flex-1 p-10 bg-white">
+                    <h2 class="text-2xl font-bold text-emerald-950 mb-8">Confirm Your Stay</h2>
+                    <form id="booking-form" class="space-y-6">
                         <input type="hidden" id="site-id">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                            <input type="text" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-800 outline-none transition">
+                        <div class="space-y-1">
+                            <label class="block text-sm font-bold text-gray-700">Full Name</label>
+                            <input type="text" placeholder="John Doe" required class="w-full px-5 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-800 outline-none transition bg-gray-50/50">
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Check In</label>
-                                <input type="date" id="check-in" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-800 outline-none transition">
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">Check In</label>
+                                <input type="date" id="check-in" required class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-800 outline-none transition bg-gray-50/50">
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Check Out</label>
-                                <input type="date" id="check-out" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-800 outline-none transition">
+                            <div class="space-y-1">
+                                <label class="block text-sm font-bold text-gray-700">Check Out</label>
+                                <input type="date" id="check-out" required class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-800 outline-none transition bg-gray-50/50">
                             </div>
                         </div>
-                        <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+
+                        <!-- Price Summary Card -->
+                        <div class="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-100 flex justify-between items-center">
                             <div>
-                                <p class="text-sm text-gray-500">Total Calculation</p>
-                                <p id="stay-details" class="font-medium">Please select dates</p>
+                                <p class="text-xs font-bold text-emerald-800 uppercase tracking-widest mb-1">Stay Summary</p>
+                                <p id="stay-details" class="text-gray-600 font-medium">Please select dates</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-xl font-bold text-emerald-900" id="total-price">$0</p>
+                                <p class="text-xs text-gray-400">Total Price</p>
+                                <p id="total-price" class="text-2xl font-extrabold text-emerald-950">$0</p>
                             </div>
                         </div>
-                        <button type="submit" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white py-3 rounded-lg font-bold transition">Confirm Reservation</button>
+
+                        <button type="submit" class="w-full btn-primary text-white py-5 rounded-2xl font-bold text-lg">
+                            Request Reservation
+                        </button>
+                        <p class="text-center text-xs text-gray-400">No payment required until reservation is confirmed by a ranger.</p>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Notifications Toast -->
-    <div id="notification" class="fixed bottom-8 right-8 z-50 bg-emerald-900 text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3">
-        <i class="fas fa-circle-check text-emerald-400"></i>
-        <span id="notification-msg">Reservation successful!</span>
-    </div>
-
-    <footer class="bg-emerald-950 text-emerald-100 py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <div class="flex justify-center items-center gap-2 mb-6">
-                <i class="fas fa-mountain text-3xl"></i>
-                <span class="text-2xl font-bold tracking-tight">EVERGREEN PEAKS</span>
+    <!-- Notification Toast -->
+    <div id="notification" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] px-10">
+        <div class="bg-emerald-950 text-white px-8 py-5 rounded-3xl shadow-2xl flex items-center gap-4 border border-emerald-800/50 backdrop-blur-xl">
+            <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center">
+                <i class="fas fa-check text-white"></i>
             </div>
-            <p class="text-emerald-400 mb-8 max-w-md mx-auto">Protecting our wilderness for generations to come. Join us in our Leave No Trace commitment.</p>
-            <div class="flex justify-center gap-6 mb-8">
-                <a href="#" class="hover:text-white transition"><i class="fab fa-instagram text-2xl"></i></a>
-                <a href="#" class="hover:text-white transition"><i class="fab fa-facebook text-2xl"></i></a>
-                <a href="#" class="hover:text-white transition"><i class="fab fa-twitter text-2xl"></i></a>
-            </div>
-            <div class="border-t border-emerald-900 pt-8 text-sm opacity-50">
-                &copy; 2025 Evergreen Peaks Campground. All rights reserved.
+            <div>
+                <p class="font-bold" id="notif-title">Success!</p>
+                <p class="text-emerald-100/70 text-sm" id="notification-msg">Message sent successfully.</p>
             </div>
         </div>
-    </footer>
+    </div>
 
     <script>
-        // Data Store
+        // Enhanced Data Store
         const campsites = [
-            {
-                id: 1,
-                name: "Cedar Ridge A1",
-                type: "tent",
-                price: 35,
-                rating: 4.8,
-                reviews: 12,
-                image: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=800",
-                description: "Deep in the cedar forest with high privacy."
-            },
-            {
-                id: 2,
-                name: "Riverside RV Park",
-                type: "rv",
-                price: 55,
-                rating: 4.9,
-                reviews: 45,
-                image: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80&w=800",
-                description: "Full hookups with a stunning river view."
-            },
-            {
-                id: 3,
-                name: "Meadow View Safari",
-                type: "glamping",
-                price: 120,
-                rating: 5.0,
-                reviews: 28,
-                image: "https://images.unsplash.com/photo-1533167649158-6d508895b680?auto=format&fit=crop&q=80&w=800",
-                description: "Luxury tent with queen bed and heater."
-            },
-            {
-                id: 4,
-                name: "Pine Peak Solo",
-                type: "tent",
-                price: 25,
-                rating: 4.5,
-                reviews: 8,
-                image: "https://images.unsplash.com/photo-1496080174650-637e3f22fa03?auto=format&fit=crop&q=80&w=800",
-                description: "Perfect for hikers looking for a quiet night."
-            },
-            {
-                id: 5,
-                name: "Sunset Ridge RV",
-                type: "rv",
-                price: 60,
-                rating: 4.7,
-                reviews: 31,
-                image: "https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&q=80&w=800",
-                description: "Best sunset views in the park with 50A power."
-            },
-            {
-                id: 6,
-                name: "Starry Night Dome",
-                type: "glamping",
-                price: 150,
-                rating: 4.9,
-                reviews: 19,
-                image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=800",
-                description: "Transparent dome roof for stargazing from bed."
-            }
+            { id: 1, name: "Cedar Ridge A1", type: "tent", price: 35, rating: 4.8, reviews: 12, image: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=800", description: "Deep in the cedar forest with maximum privacy and direct trail access." },
+            { id: 2, name: "Riverside RV Park", type: "rv", price: 55, rating: 4.9, reviews: 45, image: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80&w=800", description: "Full hookups with a stunning river view and reinforced concrete pad." },
+            { id: 3, name: "Meadow View Safari", type: "glamping", price: 120, rating: 5.0, reviews: 28, image: "https://images.unsplash.com/photo-1533167649158-6d508895b680?auto=format&fit=crop&q=80&w=800", description: "Luxury canvas tent featuring a queen-size bed, heater, and private deck." },
+            { id: 4, name: "Pine Peak Solo", type: "tent", price: 25, rating: 4.5, reviews: 8, image: "https://images.unsplash.com/photo-1496080174650-637e3f22fa03?auto=format&fit=crop&q=80&w=800", description: "Perfect for lightweight hikers looking for high altitude and quiet nights." },
+            { id: 5, name: "Sunset Ridge RV", type: "rv", price: 60, rating: 4.7, reviews: 31, image: "https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&q=80&w=800", description: "The most iconic sunset views in the valley. High-amperage electrical hookups." },
+            { id: 6, name: "Starry Night Dome", type: "glamping", price: 150, rating: 4.9, reviews: 19, image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&q=80&w=800", description: "Geodesic dome with a clear roof panel for stargazing right from your pillow." }
         ];
 
-        // DOM Elements
+        // Global State
+        let selectedSite = null;
+
+        // UI Components
         const grid = document.getElementById('campsites-grid');
         const filters = document.querySelectorAll('.filter-btn');
         const modal = document.getElementById('booking-modal');
@@ -297,40 +469,42 @@
         const checkOutInput = document.getElementById('check-out');
         const totalPriceEl = document.getElementById('total-price');
         const stayDetailsEl = document.getElementById('stay-details');
-        const notification = document.getElementById('notification');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
 
-        let selectedSite = null;
-
-        // Initialize display
+        // Render Function
         function renderSites(filter = 'all') {
             grid.innerHTML = '';
             const filtered = filter === 'all' ? campsites : campsites.filter(s => s.type === filter);
             
             filtered.forEach(site => {
                 const card = document.createElement('div');
-                card.className = 'site-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col';
+                card.className = 'site-card bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group';
                 card.innerHTML = `
-                    <div class="h-48 overflow-hidden relative">
-                        <img src="${site.image}" alt="${site.name}" class="w-full h-full object-cover">
-                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-emerald-900 shadow-sm uppercase tracking-wider">
-                            ${site.type}
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="${site.image}" alt="${site.name}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black text-emerald-950 uppercase tracking-widest shadow-sm">
+                                ${site.type}
+                            </span>
                         </div>
                     </div>
-                    <div class="p-6 flex-1 flex flex-col">
+                    <div class="p-8 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-xl font-bold text-gray-900">${site.name}</h3>
-                            <div class="flex items-center text-amber-500 text-sm">
+                            <h3 class="text-xl font-extrabold text-emerald-950">${site.name}</h3>
+                            <div class="flex items-center text-amber-400 font-bold text-sm">
                                 <i class="fas fa-star mr-1"></i> ${site.rating}
                             </div>
                         </div>
-                        <p class="text-gray-500 text-sm mb-4 line-clamp-2">${site.description}</p>
-                        <div class="mt-auto flex justify-between items-center">
+                        <p class="text-gray-500 text-sm mb-6 leading-relaxed">${site.description}</p>
+                        <div class="mt-auto flex justify-between items-center pt-6 border-t border-gray-50">
                             <div>
-                                <span class="text-2xl font-bold text-emerald-900">$${site.price}</span>
-                                <span class="text-gray-400 text-sm">/night</span>
+                                <span class="text-2xl font-black text-emerald-950">$${site.price}</span>
+                                <span class="text-gray-400 text-sm font-medium">/night</span>
                             </div>
-                            <button onclick="openBooking(${site.id})" class="bg-emerald-800 text-white px-5 py-2 rounded-lg font-semibold hover:bg-emerald-900 transition text-sm">
-                                Reserve
+                            <button onclick="openBooking(${site.id})" class="btn-primary text-white px-6 py-3 rounded-xl font-bold text-sm">
+                                Book Site
                             </button>
                         </div>
                     </div>
@@ -339,15 +513,16 @@
             });
         }
 
-        // Booking Logic
+        // Booking Actions
         window.openBooking = (id) => {
             selectedSite = campsites.find(s => s.id === id);
             document.getElementById('modal-site-title').innerText = selectedSite.name;
-            document.getElementById('modal-site-price').innerText = `$${selectedSite.price}/night`;
+            document.getElementById('modal-site-desc').innerText = selectedSite.description;
+            document.getElementById('modal-site-price').innerText = `$${selectedSite.price}`;
+            document.getElementById('modal-site-type').innerText = selectedSite.type;
             document.getElementById('modal-img-container').style.backgroundImage = `url(${selectedSite.image})`;
             document.getElementById('site-id').value = id;
             
-            // Set min dates
             const today = new Date().toISOString().split('T')[0];
             checkInInput.min = today;
             checkOutInput.min = today;
@@ -372,19 +547,23 @@
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 const total = diffDays * selectedSite.price;
                 
-                stayDetailsEl.innerText = `${diffDays} night${diffDays > 1 ? 's' : ''} stay`;
+                stayDetailsEl.innerText = `${diffDays} night${diffDays > 1 ? 's' : ''} in the ${selectedSite.type} area`;
                 totalPriceEl.innerText = `$${total}`;
             } else {
                 totalPriceEl.innerText = '$0';
-                stayDetailsEl.innerText = 'Invalid dates';
+                stayDetailsEl.innerText = 'Checkout must be after check-in';
             }
         }
 
-        // Event Listeners
+        // Event Handlers
         filters.forEach(btn => {
             btn.addEventListener('click', () => {
-                filters.forEach(b => b.classList.remove('active-filter'));
-                btn.classList.add('active-filter');
+                filters.forEach(b => {
+                    b.classList.remove('active', 'bg-emerald-900', 'text-white', 'shadow-lg');
+                    b.classList.add('bg-gray-100', 'text-gray-600');
+                });
+                btn.classList.add('active', 'bg-emerald-900', 'text-white', 'shadow-lg');
+                btn.classList.remove('bg-gray-100', 'text-gray-600');
                 renderSites(btn.dataset.filter);
             });
         });
@@ -394,53 +573,65 @@
             document.body.style.overflow = 'auto';
         };
 
-        window.onclick = (e) => {
-            if (e.target === modal) closeModal.onclick();
+        mobileMenuBtn.onclick = () => {
+            mobileMenu.classList.toggle('active');
+            menuIcon.classList.toggle('fa-bars-staggered');
+            menuIcon.classList.toggle('fa-xmark');
         };
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.onclick = () => mobileMenu.classList.remove('active');
+        });
 
         checkInInput.onchange = calculateTotal;
         checkOutInput.onchange = calculateTotal;
 
         bookingForm.onsubmit = (e) => {
             e.preventDefault();
-            
-            // Simulate API call
             const btn = bookingForm.querySelector('button');
-            const originalText = btn.innerText;
+            const originalText = btn.innerHTML;
             btn.disabled = true;
-            btn.innerText = 'Processing...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
 
             setTimeout(() => {
                 modal.style.display = 'none';
                 document.body.style.overflow = 'auto';
                 btn.disabled = false;
-                btn.innerText = originalText;
-                
-                showNotification(`Reservation confirmed for ${selectedSite.name}! Check your email.`);
-            }, 1500);
+                btn.innerHTML = originalText;
+                showNotification("Reservation Request Sent!", "A ranger will contact you shortly to finalize details.");
+            }, 1800);
         };
 
-        function showNotification(msg) {
+        document.getElementById('contact-form').onsubmit = (e) => {
+            e.preventDefault();
+            showNotification("Message Sent!", "Thank you for reaching out to Evergreen Peaks.");
+            e.target.reset();
+        };
+
+        function showNotification(title, msg) {
+            document.getElementById('notif-title').innerText = title;
             document.getElementById('notification-msg').innerText = msg;
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 4000);
+            const notif = document.getElementById('notification');
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 5000);
         }
 
-        // Mobile Menu Toggle
-        document.getElementById('mobile-menu-btn').onclick = () => {
-            showNotification("Mobile menu would open here in a full app!");
+        // Initialize
+        window.onload = () => {
+            renderSites();
+            // Sticky Nav logic
+            window.onscroll = () => {
+                const nav = document.querySelector('nav');
+                if (window.scrollY > 100) {
+                    nav.classList.add('shadow-lg', 'py-1');
+                    nav.classList.remove('border-white/20');
+                } else {
+                    nav.classList.remove('shadow-lg', 'py-1');
+                    nav.classList.add('border-white/20');
+                }
+            };
         };
-
-        document.getElementById('view-my-bookings').onclick = (e) => {
-            e.preventDefault();
-            showNotification("No active bookings found for this session.");
-        };
-
-        // Initial Load
-        window.onload = () => renderSites();
-
     </script>
 </body>
 </html>
