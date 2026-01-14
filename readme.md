@@ -1,5 +1,64 @@
 ---
 
+# Project Development Blueprint
+
+---
+
+## 1. Web Structure
+Define the core sections of the application layout:
+
+### Body
+
+#### Navigation
+- Sticky Navigation functionality
+- Mobile Responsive (Hamburger menu)
+
+#### Content
+- **Hero Section:** High-impact introduction
+- **Product/Services:** Feature grid or list
+- **Testimonials:** User social proof
+- **Call To Action (CTA):** High-conversion buttons
+- **Form:** Lead generation or contact
+
+#### Footer
+- Social media links
+- Company profile
+- Copyright
+
+---
+
+## 2. Styling & Design
+
+### Frameworks
+- **Tailwind CSS:** Utility-first
+- **Bootstrap:** Component-based
+- **Vanilla CSS:** Custom from scratch
+
+### Visual Identity
+- **Colors:** Define Primary and Secondary palettes
+
+#### Theming Options
+- **Bento Clean:** Grid-based modular layout
+- **Neobrutalism:** High contrast, bold shadows
+- **Minimalist Monochrome:** Clean, black-and-white focus
+- **Glassmorphism:** Frosted glass effects
+
+---
+
+## 3. Recommended Folder Structure
+Organize your files early to prevent "spaghetti code."
+
+```plaintext
+my-project/
+├── index.html          # Main entry point
+├── assets/             # Images, icons, and logos
+├── css/                # Stylesheets (style.css)
+├── js/                 # JavaScript logic (script.js)
+└── README.md           # Project documentation
+```
+
+---
+
 ## 4. The <head> Section: The Brain of the Page
 
 The `<head>` contains metadata. While the `<body>` is for what users see, the `<head>` is for how the page behaves and appears to the world.
@@ -21,11 +80,11 @@ The `<head>` contains metadata. While the `<body>` is for what users see, the `<
 #### Example Snippet
 ```html
 <head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>My Portfolio Project</title>
-		<link rel="stylesheet" href="css/style.css">
-		<script src="js/script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio Project</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
 </head>
 ```
 
@@ -58,16 +117,16 @@ Instead of the AI guessing what your price is, you tell it directly:
 ```html
 <script type="application/ld+json">
 {
-	"@context": "https://schema.org/",
-	"@type": "Product",
-	"name": "Blueprint Template",
-	"image": "https://example.com/photo.jpg",
-	"description": "A high-quality web development roadmap.",
-	"offers": {
-		"@type": "Offer",
-		"price": "29.00",
-		"priceCurrency": "USD"
-	}
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "Blueprint Template",
+  "image": "https://example.com/photo.jpg",
+  "description": "A high-quality web development roadmap.",
+  "offers": {
+    "@type": "Offer",
+    "price": "29.00",
+    "priceCurrency": "USD"
+  }
 }
 </script>
 ```
@@ -86,8 +145,37 @@ Instead of the AI guessing what your price is, you tell it directly:
 | Focus                  | Click-Through Rate (CTR)| Contextual Accuracy           |
 | Bot Policy             | Allow all crawlers     | Selective (Block training/Allow search) |
 
+---
 
-# Project Development Blueprint
+## 6. GitHub & VS Code Integration
+
+### Step 01: Install Git
+Check if Git is installed by typing this in your terminal:
+
+```bash
+git -v
+```
+
+### Step 02: Git Configuration
+Set up your identity (only needs to be done once):
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+```
+
+### Step 03: Connect to GitHub
+- Initialize: Run `git init` in your project folder.
+- VS Code Sync: Use the Source Control icon (on the left sidebar) and click "Publish to GitHub".
+
+### Step 04: Saving Progress (Commit & Push)
+Whenever you finish a feature, run:
+
+```bash
+git add .
+git commit -m "Brief description of what you changed"
+git push
+```
 
 ## 1. Web Structure
 First, define the core sections of the application layout:
