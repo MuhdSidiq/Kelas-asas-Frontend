@@ -304,20 +304,20 @@
                 </div>
             </div>
             <div class="lg:w-1/2 bg-white p-12 lg:p-20">
-                <form id="contact-form" class="space-y-5">
+                <form id="contact-form" method="get" action="/submit-form.html" class="space-y-5">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-950 mb-1 uppercase tracking-widest">First Name</label>
-                            <input type="text" required class="w-full px-4 py-3 bg-stone-50 border border-stone-100 rounded-lg focus:ring-1 focus:ring-slate-950 outline-none transition">
+                            <input type="text" name="first_name" required class="w-full px-4 py-3 bg-stone-50 border border-stone-100 rounded-lg focus:ring-1 focus:ring-slate-950 outline-none transition">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-950 mb-1 uppercase tracking-widest">Email</label>
-                            <input type="email" required class="w-full px-4 py-3 bg-stone-50 border border-stone-100 rounded-lg focus:ring-1 focus:ring-slate-950 outline-none transition">
+                            <input type="email" name="email" required class="w-full px-4 py-3 bg-stone-50 border border-stone-100 rounded-lg focus:ring-1 focus:ring-slate-950 outline-none transition">
                         </div>
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-950 mb-1 uppercase tracking-widest">Message</label>
-                        <textarea rows="4" required class="w-full px-4 py-3 bg-stone-50 border border-stone-100 rounded-lg focus:ring-1 focus:ring-slate-950 outline-none transition" placeholder="How can we help you explore?"></textarea>
+                        <textarea rows="4" name="message" required class="w-full px-4 py-3 bg-stone-50 border border-stone-100 rounded-lg focus:ring-1 focus:ring-slate-950 outline-none transition" placeholder="How can we help you explore?"></textarea>
                     </div>
                     <button type="submit" class="w-full bg-slate-950 text-white py-4 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-stone-800 transition">
                         Send Inquiry
@@ -579,7 +579,7 @@
         checkOutInput.onchange = calculateTotal;
 
         bookingForm.onsubmit = (e) => {
-            e.preventDefault();
+            // e.preventDefault();
             const btn = bookingForm.querySelector('button');
             const originalText = btn.innerHTML;
             btn.disabled = true;
@@ -595,9 +595,8 @@
         };
 
         document.getElementById('contact-form').onsubmit = (e) => {
-            e.preventDefault();
             showNotification("Inquiry Sent", "Thank you for contacting Evergreen Peaks.");
-            e.target.reset();
+            // e.target.reset(); // Optional: keep or remove as needed
         };
 
         function showNotification(title, msg) {
