@@ -79,6 +79,39 @@ $totalResult = $conn->query("SELECT COUNT(*) as total FROM products");
 $totalRow = $totalResult->fetch_assoc();
 $totalProducts = $totalRow['total'];
 $totalPages = ceil($totalProducts / $limit);
+
+// Handle delete action
+if (isset($_GET['delete_id'])) {
+    $delete_id = (int)$_GET['delete_id'];
+    if ($delete_id > 0) {
+        $delete_sql = "DELETE FROM products WHERE id = $delete_id";
+        if ($conn->query($delete_sql) === TRUE) {
+            $message = "Product deleted successfully!";
+            $message_type = "success";
+        } else {
+            $message = "Error deleting product: " . $conn->error;
+            $message_type = "error";
+        }
+    }
+}
+
+// Handle edit action
+if (isset($_POST['edit_id'])) {
+    $edit_id = (int)$_POST['edit_id'];
+    $name = $conn->real_escape_string($_POST['name']);
+    $price = (float)$_POST['price'];
+    $stock = (int)$_POST['stock'];
+    $is_promoted = isset($_POST['is_promoted']) ? 1 : 0;
+
+    $edit_sql = "UPDATE products SET name = '$name', price = $price, stock = $stock, is_promoted = $is_promoted WHERE id = $edit_id";
+    if ($conn->query($edit_sql) === TRUE) {
+        $message = "Product updated successfully!";
+        $message_type = "success";
+    } else {
+        $message = "Error updating product: " . $conn->error;
+        $message_type = "error";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -89,6 +122,10 @@ $totalPages = ceil($totalProducts / $limit);
 <body class="bg-gray-100 text-gray-800">
     <div class="container mx-auto p-4">
         <h2 class="text-2xl font-bold mb-4">Product List</h2>
+        <div class="mb-4 flex space-x-4">
+            <a href="index.php" class="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">Home</a>
+            <a href="setup.php" class="px-4 py-2 bg-yellow-600 text-white rounded-md shadow hover:bg-yellow-700">Setup</a>
+        </div>
         <form method="GET" class="mb-4 flex items-center space-x-4">
             <div>
                 <label for="filter" class="block text-sm font-medium">Sort by:</label>
@@ -113,6 +150,11 @@ $totalPages = ceil($totalProducts / $limit);
         <div class="mb-4">
             <a href="create_product.php" class="px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700">Add Product</a>
         </div>
+        <?php if (isset($message)): ?>
+        <div class="mb-4 p-4 bg-<?php echo $message_type === 'success' ? 'green' : 'red'; ?>-100 text-<?php echo $message_type === 'success' ? 'green' : 'red'; ?>-800 rounded-md">
+            <?php echo $message; ?>
+        </div>
+        <?php endif; ?>
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
             <thead>
                 <tr class="bg-gray-50">
@@ -137,8 +179,8 @@ $totalPages = ceil($totalProducts / $limit);
                         <?php echo $row['is_promoted'] ? 'Yes' : 'No'; ?>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <a href="edit_product.php?id=<?php echo $row['id']; ?>" class="px-2 py-1 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">Edit</a>
-                        <a href="delete_product.php?id=<?php echo $row['id']; ?>" class="px-2 py-1 bg-red-600 text-white rounded-md shadow hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                        <button onclick="openModal(<?php echo $row['id']; ?>, '<?php echo $row['name']; ?>', <?php echo $row['price']; ?>, <?php echo $row['stock']; ?>, <?php echo $row['is_promoted'] ? 'true' : 'false'; ?>)" class="px-2 py-1 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">Edit</button>
+                        <a href="?delete_id=<?php echo $row['id']; ?>" class="px-2 py-1 bg-red-600 text-white rounded-md shadow hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -152,6 +194,51 @@ $totalPages = ceil($totalProducts / $limit);
             <?php endfor; ?>
         </div>
     </div>
+
+    <!-- Modal for Edit Form -->
+    <div id="editModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 class="text-xl font-bold mb-4">Edit Product</h2>
+            <form method="POST" id="editForm">
+                <input type="hidden" name="edit_id" id="edit_id">
+                <div class="mb-4">
+                    <label for="edit_name" class="block text-sm font-medium">Product Name</label>
+                    <input type="text" name="name" id="edit_name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="mb-4">
+                    <label for="edit_price" class="block text-sm font-medium">Price (RM)</label>
+                    <input type="number" name="price" id="edit_price" step="0.01" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="mb-4">
+                    <label for="edit_stock" class="block text-sm font-medium">Stock</label>
+                    <input type="number" name="stock" id="edit_stock" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" name="is_promoted" id="edit_is_promoted" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label for="edit_is_promoted" class="ml-2 block text-sm text-gray-800">Promote this product</label>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-600 text-white rounded-md shadow hover:bg-gray-700 mr-2">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    function openModal(id, name, price, stock, isPromoted) {
+        document.getElementById('edit_id').value = id;
+        document.getElementById('edit_name').value = name;
+        document.getElementById('edit_price').value = price;
+        document.getElementById('edit_stock').value = stock;
+        document.getElementById('edit_is_promoted').checked = isPromoted;
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('editModal').classList.add('hidden');
+    }
+    </script>
 </body>
 </html>
 <?php
